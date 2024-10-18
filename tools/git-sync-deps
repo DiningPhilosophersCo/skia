@@ -265,9 +265,6 @@ def main(argv):
     return 1
 
   git_sync_deps(deps_file_path, argv, shallow, verbose)
-  subprocess.check_call(
-      [sys.executable,
-       os.path.join(os.path.dirname(deps_file_path), 'bin', 'fetch-gn')])
   if not skip_emsdk:
     subprocess.check_call(
         [sys.executable,
