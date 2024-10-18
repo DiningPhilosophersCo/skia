@@ -1,13 +1,63 @@
 {
-  "//": [
-    "These versions of these were the latest version avaiable at the time of writing",
-    "with the exception of jasmine, which was version 3 because our tests currently use v3."
-  ],
-  "devDependencies": {
-    "jasmine-core": "3.10.1",
-    "karma": "6.3.15",
-    "karma-chrome-launcher": "3.1.0",
-    "karma-firefox-launcher": "2.1.2",
-    "karma-jasmine": "4.0.1"
+  "name": "esy-skia",
+  "version": "0.7.0",
+  "description": "Mirror of skia repo, buildable with esy",
+  "directories": {
+    "doc": "docs",
+    "example": "example",
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DiningPhilosophersCo/esy-skia.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DiningPhilosophersCo/esy-skia/issues"
+  },
+  "homepage": "https://skia.org",
+  "esy": {
+    "buildEnv": {
+      "GIT_SYNC_DEPS_SKIP_EMSDK": "1",
+      "PATH": "#{self.target_dir : $PATH}"
+    },
+    "build": [
+      [
+        "gn",
+        "gen",
+        "#{self.target_dir}",
+        "--args=skia_use_system_libjpeg_turbo=true is_debug=false extra_cflags=[\"-I#{esy-libjpeg-turbo.install}/include\"] extra_ldflags=[\"-L#{esy-libjpeg-turbo.lib}\", \"-ljpeg\" ]"
+      ],
+      "ninja.exe -C #{self.target_dir}"
+    ],
+    "install": [
+      [
+        "bash",
+        "./esy/install.sh",
+        "#{os}"
+      ]
+    ],
+    "exportedEnv": {
+      "SKIA_INCLUDE_PATH": {
+        "val": "#{self.install / 'include'}",
+        "scope": "global"
+      },
+      "SKIA_LIB_PATH": {
+        "val": "#{self.lib}",
+        "scope": "global"
+      },
+      "LD_LIBRARY_PATH": {
+        "val": "#{self.lib : $LD_LIBRARY_PATH}",
+        "scope": "global"
+      },
+      "PKG_CONFIG_PATH": {
+        "val": "#{self.lib : $PKG_CONFIG_PATH}",
+        "scope": "global"
+      }
+    }
+  },
+  "dependencies": {
+    "esy-gn": "0.1.x",
+    "@esy-cross/ninja-build": "^1.8.2001",
+    "esy-libjpeg-turbo": "revery-ui/libjpeg-turbo#dbb3dd5"
   }
 }

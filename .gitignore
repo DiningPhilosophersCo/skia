@@ -65,3 +65,7 @@ target/
 
 # A user is free to specify custom builds or options here without them being checked in.
 bazel/user/buildrc
+
+*~
+_esy
+esy.lock # because esy-skia is a library
